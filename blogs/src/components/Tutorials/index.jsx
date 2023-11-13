@@ -1,0 +1,7 @@
+import React from "react";
+
+const Tutorials = () => {
+    return <h1>This is Tutorials page lorsjjjjjj jdddddddddddddddddd jsd sqknwasdnf;wenfwenf k fhweirf wef iliefefuwen const [state, dispatch] = useReducer(ferh ejfejfnjefn efnjewndne en f ejnfnf wd ekk ekwekw kf jekjfowek o j   ergh we aflwe owa ef wefef iowe rwe iowerj we erfwi weaioijwea iroitwerfnwkearifoiwerajweratfno ior oer theiortj esrhgoierjtoierj oerihwerionrirtjjkds ieeio  eijrrjj j jj j j j jj j j j j jj  jj j iojdf ewioj wej wn eotfj knewo;ij weiojje w;jewjij wepou we jweje wpojweowejeojg oeoweweik weo rjfewrjeij  erj ewop eworjo qwepo eowrjpqweowa eiwtfaw oawoerja; ejtfweo fweo werfjweojrweoijt werojwpejr weorjw rjeo awjerkwaefiawejfasdlfj werjwerksdfgjn, second, third)This is Tutorials page lorsjjjjjj jdddddddddddddddddd jsd sqknwasdnf;wenfwenf k fhweirf wef iliefefuwen const [state, dispatch] = useReducer(ferh ejfejfnjefn efnjewndne en f ejnfnf wd ekk ekwekw kf jekjfowek o j   ergh we aflwe owa ef wefef iowe rwe iowerj we erfwi weaioijwea iroitwerfnwkearifoiwerajweratfno ior oer theiortj esrhgoierjtoierj oerihwerionrirtjjkds ieeio  eijrrjj j jj j j j jj j j j j jj  jj j iojdf ewioj wej wn eotfj knewo;ij weiojje w;jewjij wepou we jweje wpojweowejeojg oeoweweik weo rjfewrjeij  erj ewop eworjo qwepo eowrjpqweowa eiwtfaw oawoerja; ejtfweo fweo werfjweojrweoijt werojwpejr weorjw rjeo awjerkwaefiawejfasdlfj werjwerksdfgjn, second, third) djhflwef web</h1>
+};
+
+export default Tutorials;
