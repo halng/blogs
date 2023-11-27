@@ -37,8 +37,8 @@ public class SecurityConfig {
             .authenticated().requestMatchers(HttpMethod.PUT).authenticated());
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable);
-        httpSecurity.addFilterBefore(new AuthenticationFilter(),
-            UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.addFilterBefore(new AuthenticationFilter(),
+//            UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
     }
 }

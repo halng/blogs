@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/blogs")
 public class BlogsController {
 
-    @GetMapping("/")
+    @GetMapping
     public String getAllBlogs() {
         return "hello world";
     }
@@ -20,4 +20,9 @@ public class BlogsController {
         return "hello world v2";
     }
 
+    /** TODO:
+     *  - Get all category under category type
+     *  - Get all blog by category
+     *  - Get detail blog
+     */
 }
