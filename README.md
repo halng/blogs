@@ -17,3 +17,10 @@
 - [ ] Create ui as much elegant as I can
 - [ ] docker with standard alone
 - [ ] how to deploy ?
+
+## Set-up
+
+### BE
+
+- Step 1: create env variable call X_API_KEY_THE_BASICS and enter your value
+- Step 2: Run app
