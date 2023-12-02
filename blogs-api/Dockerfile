@@ -1,18 +1,39 @@
-# Use the official OpenJDK 17 image as a base image
-FROM eclipse-temurin:17-jre-alpine
+# syntax=docker/dockerfile:1.4
+FROM --platform=$BUILDPLATFORM maven:3.8.5-eclipse-temurin-17 AS builder
+WORKDIR /workdir/server
+COPY pom.xml /workdir/server/pom.xml
+RUN mvn dependency:go-offline
 
-# Set the working directory in the container
-WORKDIR /app
+COPY src /workdir/server/src
+RUN mvn install
 
-# Copy the Spring Boot JAR file into the container
-COPY target/blogs-api-0.0.1-SNAPSHOT.jar blogs-api-0.0.1-SNAPSHOT.jar
+FROM builder as dev-envs
 
-# Get the value from the system environment and set it as an environment variable
-ARG X_API_KEY_THE_BASICS
-ENV X_API_KEY_THE_BASICS=${X_API_KEY_THE_BASICS}
+RUN <<EOF
+apt-get update
+apt-get install -y git
+EOF
 
-# Expose the port that your Spring Boot application runs on
-EXPOSE 9000
+RUN <<EOF
+useradd -s /bin/bash -m vscode
+groupadd docker
+usermod -aG docker vscode
+EOF
+# install Docker tools (cli, buildx, compose)
+COPY --from=gloursdocker/docker / /
+CMD ["mvn", "spring-boot:run"]
 
-# Command to run your application
-CMD ["java", "-jar", "blogs-api-0.0.1-SNAPSHOT.jar"]
+FROM builder as prepare-production
+RUN mkdir -p target/dependency
+WORKDIR /workdir/server/target/dependency
+RUN jar -xf ../*.jar
+
+FROM eclipse-temurin:17-jre-focal
+
+EXPOSE 8080
+VOLUME /tmp
+ARG DEPENDENCY=/workdir/server/target/dependency
+COPY --from=prepare-production ${DEPENDENCY}/BOOT-INF/lib /app/lib
+COPY --from=prepare-production ${DEPENDENCY}/META-INF /app/META-INF
+COPY --from=prepare-production ${DEPENDENCY}/BOOT-INF/classes /app
+ENTRYPOINT ["java","-cp","app:app/lib/*","com.thebasics.blogsapi.BlogsApiApplication"]
