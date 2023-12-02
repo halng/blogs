@@ -25,7 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({BadRequestException.class})
-            public ResponseEntity<ResVm> badRequestExceptionHandler(BadRequestException badRequestException,
+    public ResponseEntity<ResVm> badRequestExceptionHandler(BadRequestException badRequestException,
         WebRequest webRequest) {
         ResVm errorResVm = new ResVm(HttpStatus.BAD_REQUEST.value(),
             badRequestException.getMessage());

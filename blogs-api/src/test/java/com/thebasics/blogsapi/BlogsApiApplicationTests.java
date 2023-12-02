@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 
 class BlogsApiApplicationTests {
 
-	@Test
-	void test() {
-		String msg = "Hello World";
-		Assertions.assertEquals(11, msg.length());
-	}
+    @Test
+    void test() {
+        String msg = "Hello World";
+        Assertions.assertEquals(11, msg.length());
+    }
 
 }
