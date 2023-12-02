@@ -5,13 +5,13 @@ on:
       - main
     paths:
       - blogs-api/**
-      - .github/workflows/build.yml
+      - .github/workflows/build-be.yml
   pull_request:
     branches:
       - main
     paths: 
         - blogs-api/**
-        - .github/workflows/build.yml
+        - .github/workflows/build-be.yml
 
 jobs:
   build:
