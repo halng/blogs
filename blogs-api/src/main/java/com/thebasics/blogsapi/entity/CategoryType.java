@@ -1,9 +1,9 @@
 package com.thebasics.blogsapi.entity;
 
 public enum CategoryType {
-    BLOGS,
+    BLOGS(),
     /**
      * for example Java, Python...
      */
-    LIBRARY
+    LIBRARY,
 }

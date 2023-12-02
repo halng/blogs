@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IBlogPostRepository extends JpaRepository<BlogPost, Long> {
 
+    boolean existsBySlug(String slug);
 }

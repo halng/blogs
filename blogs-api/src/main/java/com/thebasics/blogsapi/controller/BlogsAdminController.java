@@ -1,8 +1,10 @@
 package com.thebasics.blogsapi.controller;
 
 
+import com.thebasics.blogsapi.service.IAdminBlogsService;
 import com.thebasics.blogsapi.viewmodel.CatePostVm;
 import com.thebasics.blogsapi.viewmodel.ResVm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,20 +23,27 @@ public class BlogsAdminController {
     /**
      * Handle category: - Create new category - Update category name/type - Disable category
      */
+    private final IAdminBlogsService service;
+
+    @Autowired
+    public BlogsAdminController(IAdminBlogsService service) {
+        this.service = service;
+    }
+
     @PostMapping("/categories")
     public ResponseEntity<ResVm> createNewCategory(@RequestBody CatePostVm catePostVm) {
-        return null;
+        return this.service.createCategory(catePostVm);
     }
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<ResVm> updateCategory(@RequestBody CatePostVm catePostVm,
-        @PathVariable String id) {
-        return null;
+        @PathVariable Long id) {
+        return this.service.updateCategory(id, catePostVm);
     }
 
     @PatchMapping("/categories/{id}")
-    public ResponseEntity<ResVm> updateStatusCategory(@PathVariable String id) {
-        return null;
+    public ResponseEntity<ResVm> updateStatusCategory(@PathVariable Long id) {
+        return this.service.updateStatusCategory(id);
     }
 
     /**

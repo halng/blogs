@@ -22,7 +22,8 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "blog_content")
-public class BlogContent extends AbstractAuditEntity{
+public class BlogContent extends AbstractAuditEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
