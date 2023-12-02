@@ -23,7 +23,8 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "blog_post")
-public class BlogPost extends AbstractAuditEntity{
+public class BlogPost extends AbstractAuditEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +32,8 @@ public class BlogPost extends AbstractAuditEntity{
     @Column(unique = true)
     private String slug;
     private Boolean isShow;
+    private String nextBlog;
+    private String previousBlog;
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "post")
     private BlogContent blog;
     @ManyToOne

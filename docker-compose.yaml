@@ -16,6 +16,20 @@ services:
       - blogs-api
     restart: unless-stopped
 
+  backend:
+    build:
+      context: blogs-api
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - 9090:9090
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blogs
+      X_API_KEY_THE_BASICS: ""
+    networks:
+      - blogs-api
+
 networks:
   blogs-api:
     driver: bridge

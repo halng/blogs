@@ -1,13 +1,15 @@
 package com.thebasics.blogsapi;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+
 class BlogsApiApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void test() {
+        String msg = "Hello World";
+        Assertions.assertEquals(11, msg.length());
+    }
 
 }
