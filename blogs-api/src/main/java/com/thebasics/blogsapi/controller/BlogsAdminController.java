@@ -1,12 +1,15 @@
 package com.thebasics.blogsapi.controller;
 
 
+import com.thebasics.blogsapi.service.IAdminBlogsService;
+import com.thebasics.blogsapi.viewmodel.BlogContentPostVm;
+import com.thebasics.blogsapi.viewmodel.BlogMetaDataPostVm;
 import com.thebasics.blogsapi.viewmodel.CatePostVm;
 import com.thebasics.blogsapi.viewmodel.ResVm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,20 +24,22 @@ public class BlogsAdminController {
     /**
      * Handle category: - Create new category - Update category name/type - Disable category
      */
+    private final IAdminBlogsService service;
+
+    @Autowired
+    public BlogsAdminController(IAdminBlogsService service) {
+        this.service = service;
+    }
+
     @PostMapping("/categories")
     public ResponseEntity<ResVm> createNewCategory(@RequestBody CatePostVm catePostVm) {
-        return null;
+        return this.service.createCategory(catePostVm);
     }
 
     @PutMapping("/categories/{id}")
     public ResponseEntity<ResVm> updateCategory(@RequestBody CatePostVm catePostVm,
-        @PathVariable String id) {
-        return null;
-    }
-
-    @PatchMapping("/categories/{id}")
-    public ResponseEntity<ResVm> updateStatusCategory(@PathVariable String id) {
-        return null;
+        @PathVariable Long id) {
+        return this.service.updateCategory(id, catePostVm);
     }
 
     /**
@@ -42,19 +47,28 @@ public class BlogsAdminController {
      */
 
     @PostMapping("/blogs")
-    public ResponseEntity<ResVm> createNewBlog(@RequestBody CatePostVm catePostVm) {
-        return null;
+    public ResponseEntity<ResVm> createNewBlog(@RequestBody BlogMetaDataPostVm data) {
+        return this.service.createBlog(data);
     }
 
     @PutMapping("/blogs/{id}")
-    public ResponseEntity<ResVm> updateBlog(@RequestBody CatePostVm catePostVm,
-        @PathVariable String id) {
-        return null;
+    public ResponseEntity<ResVm> updateBlogMetadata(@RequestBody BlogMetaDataPostVm data,
+        @PathVariable Long id) {
+        return this.service.updateBlog(id, data);
     }
 
-    @PatchMapping("/blogs/{id}")
-    public ResponseEntity<ResVm> updateStatusBlog(@PathVariable String id) {
-        return null;
+    /**
+     * Handle blog content
+     */
+
+    @PostMapping("/blogs-content")
+    public ResponseEntity<ResVm> createContentBlog(@RequestBody BlogContentPostVm data) {
+        return this.service.createContentBlog(data);
+    }
+
+    @PutMapping("/blogs-content")
+    public ResponseEntity<ResVm> updateContentBlog(@RequestBody BlogContentPostVm data) {
+        return this.service.updateContentBlog(data);
     }
 
     @GetMapping("/status")

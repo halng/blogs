@@ -1,8 +1,8 @@
 package com.thebasics.blogsapi.config.middleware;
 
+import com.thebasics.blogsapi.exceptions.AuthException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 
@@ -18,11 +18,11 @@ public class AuthenticationService {
             String apiRequestValue = request.getHeader(AUTH_TOKEN_HEADER_NAME);
 
             if (!StringUtils.isNotEmpty(apiKey) && !StringUtils.isNotEmpty(apiRequestValue)) {
-                throw new NullPointerException("X_API_KEY_THE_BASICS or X-API-KEY is null");
+                throw new AuthException("X_API_KEY_THE_BASICS or X-API-KEY is null");
             }
 
             if (!apiKey.equals(apiRequestValue)) {
-                throw new BadCredentialsException("Invalid API key");
+                throw new AuthException("Invalid API key");
             }
 
             return new ApiKeyAuthentication(apiKey, AuthorityUtils.NO_AUTHORITIES);

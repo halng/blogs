@@ -5,7 +5,9 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 public class ApiKeyAuthentication extends AbstractAuthenticationToken {
-    private String apiKey;
+
+    private final String apiKey;
+
     public ApiKeyAuthentication(String apiKey,
         Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
