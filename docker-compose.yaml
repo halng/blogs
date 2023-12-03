@@ -20,13 +20,22 @@ services:
     build:
       context: blogs-api
       dockerfile: Dockerfile
-    depends_on:
-      - postgres
+    volumes:
+      - ./credential.json:/home/harold/dev/temp/blogs-api-service-1a926f316d65.json
+    environment:
+      X_API_KEY_THE_BASICS: thebasics_849d14f5b590f0403b9e0bca06769867c2c0bc52734212a99d5ed10caa993317fc254fd7cf4de9d843c48ec1ee4cfcbdc6e6cdcbb737bd20f397ecae8bf9e8d8
+      INSTANCE_CONNECTION_NAME: blogs-api-service:us-central1:my-instance-for-blogs-api
+      GOOGLE_APPLICATION_CREDENTIALS: ./credential.json
+      DB_USER: admin
+      DB_PASS: hello@world 
+      DB_NAME: blogs
+    # depends_on:
+    #   - postgres
     ports:
       - 9090:9090
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blogs
-      X_API_KEY_THE_BASICS: ""
+    # environment:
+    #   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/blogs
+    #   X_API_KEY_THE_BASICS: ""
     networks:
       - blogs-api
 
