@@ -68,8 +68,21 @@
       <artifactId>slf4j-api</artifactId>
       <version>2.0.7</version>
     </dependency>
-  </dependencies>
+    <!-- https://mvnrepository.com/artifact/com.google.cloud/spring-cloud-gcp-starter-sql-postgresql -->
+    <dependency>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>spring-cloud-gcp-starter-sql-postgresql</artifactId>
+      <version>3.1.0</version>
+    </dependency>
 
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+    </repository>
+  </repositories>
   <build>
     <plugins>
       <plugin>
