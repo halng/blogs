@@ -20,7 +20,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         EntityNotFoundException entityNotFoundException, WebRequest webRequest) {
         ResVm errorResVm = new ResVm(HttpStatus.NOT_FOUND.value(),
             entityNotFoundException.getMessage());
-        LOG.error(errorResVm.msg());
+        LOG.error(errorResVm.data().toString());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResVm);
     }
 
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         WebRequest webRequest) {
         ResVm errorResVm = new ResVm(HttpStatus.BAD_REQUEST.value(),
             badRequestException.getMessage());
-        LOG.error(errorResVm.msg());
+        LOG.error(errorResVm.data().toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResVm);
     }
 
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         AuthException authException, WebRequest webRequest) {
         ResVm errorResVm = new ResVm(HttpStatus.UNAUTHORIZED.value(),
             authException.getMessage());
-        LOG.error(errorResVm.msg());
+        LOG.error(errorResVm.data().toString());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResVm);
     }
 }

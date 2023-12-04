@@ -12,8 +12,6 @@ import com.thebasics.blogsapi.viewmodel.BlogContentPostVm;
 import com.thebasics.blogsapi.viewmodel.BlogMetaDataPostVm;
 import com.thebasics.blogsapi.viewmodel.CatePostVm;
 import com.thebasics.blogsapi.viewmodel.ResVm;
-import java.lang.reflect.Field;
-import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,39 +29,6 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
     private final ICategoryRepository iCategoryRepository;
     private final IBlogPostRepository iBlogPostRepository;
     private final IBlogContentRepository iBlogContentRepository;
-
-    /**
-     * Generic method for create new entity
-     *
-     * @param data
-     * @param <T>
-     * @return
-     */
-    public <T, K> ResponseEntity<ResVm> create(T data, Function<T, K> createFunc) {
-        K obj = createFunc.apply(data);
-        try {
-            Field field = obj.getClass().getDeclaredField("name");
-            field.setAccessible(true);
-            String value = (String) field.get(obj);
-            return ResponseEntity.ok(new ResVm(HttpStatus.CREATED.value(),
-                "Create new %s: %s successfully".formatted(obj.getClass(), value)));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public <T, K> ResponseEntity<ResVm> update(T data, Function<T, K> updateFunc) {
-        K obj = updateFunc.apply(data);
-        try {
-            Field field = obj.getClass().getDeclaredField("name");
-            field.setAccessible(true);
-            String value = (String) field.get(obj);
-            return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(),
-                "Update %s: %s successfully".formatted(obj.getClass(), value)));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private BlogPost findBlogById(Long id) {
         return this.iBlogPostRepository.findById(id).orElseThrow(
@@ -84,7 +49,12 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
             throw new BadRequestException(
                 "Category: %s Already Exits.".formatted(data.displayName()));
         }
-        return this.create(data.toModel(), this.iCategoryRepository::save);
+
+        Category newCate = this.iCategoryRepository.save(data.toModel());
+
+        CatePostVm res = new CatePostVm(newCate.getId(), newCate.getName(), newCate.getSlug(),
+            newCate.getType().name().toLowerCase(), newCate.getIsShow(), newCate.getDisplayName());
+        return ResponseEntity.ok(new ResVm(HttpStatus.CREATED.value(), res));
     }
 
     @Override
@@ -99,11 +69,17 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
                 "Category with slug: %s already exists".formatted(data.slug()));
         }
 
-        Category newCate = data.toModel();
-        newCate.setId(id);
-        newCate.setCreatedTime(cate.getCreatedTime());
-        newCate.setCreatedBy(cate.getCreatedBy());
-        return this.update(newCate, this.iCategoryRepository::save);
+        cate.setName(data.name());
+        cate.setSlug(data.slug());
+        cate.setDisplayName(data.displayName());
+        cate.setIsShow(data.isShow());
+
+        Category updatedCate = this.iCategoryRepository.save(cate);
+
+        CatePostVm res = new CatePostVm(updatedCate.getId(), updatedCate.getName(),
+            updatedCate.getSlug(), updatedCate.getType().name().toLowerCase(),
+            updatedCate.getIsShow(), updatedCate.getDisplayName());
+        return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), res));
     }
 
     public String getValidSlug(String originSlug) {
@@ -125,13 +101,16 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         BlogPost blogPost = BlogPost.builder().isShow(data.isShow()).title(data.title())
             .slug(data.slug()).build();
 
-        blogPost.setCategory(findCategoryById(data.cate_id()));
+        blogPost.setCategory(findCategoryById(data.cateId()));
         blogPost.setCreatedBy(data.createdBy());
         blogPost.setUpdatedBy(data.updateBy());
         blogPost.setNextBlog(getValidSlug(data.nextBlog()));
         blogPost.setPreviousBlog(getValidSlug(data.previousBlog()));
 
-        return this.create(blogPost, this.iBlogPostRepository::save);
+        BlogPost newBlogPost = this.iBlogPostRepository.save(blogPost);
+        BlogMetaDataPostVm metaDataPostVm = BlogMetaDataPostVm.fromModel(newBlogPost);
+
+        return ResponseEntity.ok(new ResVm(HttpStatus.CREATED.value(), metaDataPostVm));
     }
 
     @Override
@@ -148,12 +127,15 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
 
         blogPost.setTitle(data.title());
         blogPost.setSlug(data.slug());
-        blogPost.setIsShow(!data.isShow());
+        blogPost.setIsShow(data.isShow());
         blogPost.setNextBlog(getValidSlug(data.nextBlog()));
         blogPost.setPreviousBlog(getValidSlug(data.previousBlog()));
-        blogPost.setCategory(findCategoryById(data.cate_id()));
+        blogPost.setCategory(findCategoryById(data.cateId()));
 
-        return this.update(blogPost, this.iBlogPostRepository::save);
+        BlogPost newBlogPost = this.iBlogPostRepository.save(blogPost);
+        BlogMetaDataPostVm metaDataPostVm = BlogMetaDataPostVm.fromModel(newBlogPost);
+
+        return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), metaDataPostVm));
     }
 
 
@@ -166,11 +148,15 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         BlogContent blogContent = BlogContent.builder().content(data.content()).post(blogPost)
             .build();
 
+        blogContent.setUpdatedBy(data.updatedBy());
+        blogContent.setCreatedBy(data.createdBy());
+
         BlogContent newBlog = this.iBlogContentRepository.save(blogContent);
 
         blogPost.setBlog(newBlog);
+        this.iBlogPostRepository.save(blogPost);
 
-        return this.update(blogPost, this.iBlogPostRepository::save);
+        return ResponseEntity.ok(new ResVm(HttpStatus.CREATED.value(), "Create new success"));
     }
 
     @Override
@@ -178,7 +164,11 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         LOG.info("Receive request to update blog content " + data.id());
 
         BlogPost blogPost = this.findBlogById(data.id());
-        blogPost.getBlog().setContent(data.content());
-        return this.update(blogPost, this.iBlogPostRepository::save);
+        BlogContent content = blogPost.getBlog();
+        content.setContent(data.content());
+        content.setUpdatedBy(data.updatedBy());
+        this.iBlogContentRepository.save(content);
+
+        return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Update success"));
     }
 }
