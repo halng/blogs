@@ -151,10 +151,7 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         blogContent.setUpdatedBy(data.updatedBy());
         blogContent.setCreatedBy(data.createdBy());
 
-        BlogContent newBlog = this.iBlogContentRepository.save(blogContent);
-
-        blogPost.setBlog(newBlog);
-        this.iBlogPostRepository.save(blogPost);
+        this.iBlogContentRepository.save(blogContent);
 
         return ResponseEntity.ok(new ResVm(HttpStatus.CREATED.value(), "Create new success"));
     }
