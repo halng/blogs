@@ -33,6 +33,8 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
     private final IBlogPostRepository iBlogPostRepository;
     private final IBlogContentRepository iBlogContentRepository;
 
+    private final static String DEFAULT_USER = "DEFAULT_USER";
+
     private BlogPost findBlogById(Long id) {
         return this.iBlogPostRepository.findById(id).orElseThrow(
             () -> new EntityNotFoundException("Blog with id: %d doesn't exists".formatted(id)));
@@ -51,10 +53,9 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         if (this.iCategoryRepository.existsBySlug(data.slug())) {
             throw new BadRequestException("Category: %s Already Exits.".formatted(data.parent()));
         }
-
         Category category = data.toModel();
-        category.setCreatedBy("DEFAULT");
-        category.setUpdatedBy("DEFAULT");
+        category.setCreatedBy(DEFAULT_USER);
+        category.setUpdatedBy(DEFAULT_USER);
 
         Category newCate = this.iCategoryRepository.save(category);
 
@@ -79,8 +80,8 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         cate.setSlug(data.slug());
         cate.setParent(data.parent());
         cate.setIsShow(data.isShow());
-        cate.setCreatedBy("DEFAULT");
-        cate.setUpdatedBy("DEFAULT");
+        cate.setCreatedBy(DEFAULT_USER);
+        cate.setUpdatedBy(DEFAULT_USER);
 
         Category updatedCate = this.iCategoryRepository.save(cate);
 
