@@ -2,17 +2,14 @@ package com.thebasics.blogsapi.service;
 
 import com.thebasics.blogsapi.entity.BlogPost;
 import com.thebasics.blogsapi.entity.Category;
-import com.thebasics.blogsapi.entity.CategoryType;
 import com.thebasics.blogsapi.exceptions.EntityNotFoundException;
 import com.thebasics.blogsapi.repository.IBlogContentRepository;
 import com.thebasics.blogsapi.repository.IBlogPostRepository;
 import com.thebasics.blogsapi.repository.ICategoryRepository;
 import com.thebasics.blogsapi.viewmodel.BlogResVm;
-import com.thebasics.blogsapi.viewmodel.CategoryResVm;
 import com.thebasics.blogsapi.viewmodel.ResCommon;
 import com.thebasics.blogsapi.viewmodel.ResDataVm;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -34,20 +31,21 @@ public class UserBlogsServiceImpl implements IUserBlogsService {
         List<ResCommon> library = new ArrayList<>();
         List<ResCommon> blogs = new ArrayList<>();
 
-        for (var obj : categories) {
-            var res = new ResCommon(obj.getDisplayName(), obj.getSlug());
-            if (obj.getType().equals(CategoryType.BLOGS)) {
-                blogs.add(res);
-            } else {
-                library.add(res);
-            }
-        }
+//        for (var obj : categories) {
+//            var res = new ResCommon(obj.getName(), obj.getSlug());
+//            if (obj.getType().equals(CategoryType.BLOGS)) {
+//                blogs.add(res);
+//            } else {
+//                library.add(res);
+//            }
+//        }
+//
+//        var obj1 = new CategoryResVm(CategoryType.BLOGS.name(), blogs);
+//        var obj2 = new CategoryResVm(CategoryType.LIBRARY.name(), library);
 
-        var obj1 = new CategoryResVm(CategoryType.BLOGS.name(), blogs);
-        var obj2 = new CategoryResVm(CategoryType.LIBRARY.name(), library);
-
-        return ResponseEntity.ok(
-            new ResDataVm<>(HttpStatus.OK.value(), "Success", Arrays.asList(obj1, obj2)));
+//        return ResponseEntity.ok(
+//            new ResDataVm<>(HttpStatus.OK.value(), "Success", Arrays.asList(obj1, obj2)));
+        return null;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.thebasics.blogsapi.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thebasics.blogsapi.entity.BlogContent;
 import com.thebasics.blogsapi.entity.BlogPost;
 import com.thebasics.blogsapi.entity.Category;
@@ -12,6 +13,8 @@ import com.thebasics.blogsapi.viewmodel.BlogContentPostVm;
 import com.thebasics.blogsapi.viewmodel.BlogMetaDataPostVm;
 import com.thebasics.blogsapi.viewmodel.CatePostVm;
 import com.thebasics.blogsapi.viewmodel.ResVm;
+import java.io.IOException;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -46,14 +49,17 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
         LOG.info("Receive request to create new category with " + data.toString());
 
         if (this.iCategoryRepository.existsBySlug(data.slug())) {
-            throw new BadRequestException(
-                "Category: %s Already Exits.".formatted(data.displayName()));
+            throw new BadRequestException("Category: %s Already Exits.".formatted(data.parent()));
         }
 
-        Category newCate = this.iCategoryRepository.save(data.toModel());
+        Category category = data.toModel();
+        category.setCreatedBy("DEFAULT");
+        category.setUpdatedBy("DEFAULT");
+
+        Category newCate = this.iCategoryRepository.save(category);
 
         CatePostVm res = new CatePostVm(newCate.getId(), newCate.getName(), newCate.getSlug(),
-            newCate.getType().name().toLowerCase(), newCate.getIsShow(), newCate.getDisplayName());
+            newCate.getIsShow(), newCate.getParent());
         return ResponseEntity.ok(new ResVm(HttpStatus.CREATED.value(), res));
     }
 
@@ -71,14 +77,15 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
 
         cate.setName(data.name());
         cate.setSlug(data.slug());
-        cate.setDisplayName(data.displayName());
+        cate.setParent(data.parent());
         cate.setIsShow(data.isShow());
+        cate.setCreatedBy("DEFAULT");
+        cate.setUpdatedBy("DEFAULT");
 
         Category updatedCate = this.iCategoryRepository.save(cate);
 
         CatePostVm res = new CatePostVm(updatedCate.getId(), updatedCate.getName(),
-            updatedCate.getSlug(), updatedCate.getType().name().toLowerCase(),
-            updatedCate.getIsShow(), updatedCate.getDisplayName());
+            updatedCate.getSlug(), updatedCate.getIsShow(), updatedCate.getParent());
         return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), res));
     }
 
@@ -159,7 +166,7 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
     @Override
     public ResponseEntity<ResVm> updateContentBlog(BlogContentPostVm data) {
         LOG.info("Receive request to update blog content " + data.id());
-
+        //TODO: UPDATE LOGIC HERE
         BlogPost blogPost = this.findBlogById(data.id());
         BlogContent content = blogPost.getBlog();
         content.setContent(data.content());
@@ -168,4 +175,63 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
 
         return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Update success"));
     }
+
+    @Override
+    public ResponseEntity<ResVm> initialize(Object o, String type) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        if ("category".equals(type)) {
+            CatePostVm catePostVm = objectMapper.convertValue(o, CatePostVm.class);
+            LOG.info("Initialize start now... %s".formatted(catePostVm.getClass()));
+
+            if (Objects.isNull(catePostVm.id())) {
+                LOG.info("Status: Create category");
+                return this.createCategory(catePostVm);
+            }
+
+            Category _this = findCategoryById(catePostVm.id());
+            if (_this.equalsWithVm(catePostVm)) {
+                LOG.info("Status: Category Not Change");
+                return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Nope"));
+            }
+
+            // if 2 object not equal -> then call update function
+            LOG.info("Status: Update category %d".formatted(catePostVm.id()));
+            return this.updateCategory(catePostVm.id(), catePostVm);
+
+        } else if ("metadata".equals(type)) {
+
+            BlogMetaDataPostVm blogMetaDataPostVm = objectMapper.convertValue(o,
+                BlogMetaDataPostVm.class);
+            LOG.info("Initialize start now... %s".formatted(blogMetaDataPostVm.getClass()));
+
+            if (Objects.isNull(blogMetaDataPostVm.id())) {
+                LOG.info("Status: Blog Metadata Create");
+                return this.createBlog(blogMetaDataPostVm);
+            }
+
+            BlogPost _this = findBlogById(blogMetaDataPostVm.id());
+            if (_this.equalsWithVm(blogMetaDataPostVm)) {
+                LOG.info("Status: Blog Metadata Not Change");
+                return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Nope"));
+            }
+
+            LOG.info("Status: Blog Metadata Update %d".formatted(blogMetaDataPostVm.id()));
+            return this.updateBlog(blogMetaDataPostVm.id(), blogMetaDataPostVm);
+
+        } else {
+
+            LOG.info("Initialize start now... %s".formatted(BlogContentPostVm.class));
+            BlogContentPostVm _that = objectMapper.convertValue(o, BlogContentPostVm.class);
+            BlogPost post = findBlogById(_that.id());
+            BlogContent _this = post.getBlog();
+            if (Objects.equals(_this.getContent(), _that.content())) {
+                LOG.info("Status: Blog Content Not Change");
+                return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Nope"));
+            }
+            LOG.info("Status: Update Blog Content %d".formatted(_that.id()));
+            return this.updateContentBlog(_that);
+        }
+    }
+
 }

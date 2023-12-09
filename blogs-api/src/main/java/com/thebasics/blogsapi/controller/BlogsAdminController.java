@@ -6,6 +6,7 @@ import com.thebasics.blogsapi.viewmodel.BlogContentPostVm;
 import com.thebasics.blogsapi.viewmodel.BlogMetaDataPostVm;
 import com.thebasics.blogsapi.viewmodel.CatePostVm;
 import com.thebasics.blogsapi.viewmodel.ResVm;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,5 +75,11 @@ public class BlogsAdminController {
     @GetMapping("/status")
     public ResponseEntity<ResVm> checkStatus() {
         return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "[ADMIN] Alive"));
+    }
+
+    @PostMapping("/initialize/{type}")
+    public ResponseEntity<ResVm> initializeData(@RequestBody Object data, @PathVariable String type)
+        throws IOException {
+        return this.service.initialize(data, type);
     }
 }
