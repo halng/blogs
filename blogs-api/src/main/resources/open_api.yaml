@@ -1,0 +1,269 @@
+openapi: "3.0.3"
+info:
+  title: "blogs_api API"
+  description: "blogs_api API"
+  version: "1.0.0"
+servers:
+  - url: "https://blogs_api"
+paths:
+  /api/v1/admin-blogger/blogs:
+    post:
+      summary: "POST api/v1/admin-blogger/blogs"
+      operationId: "createNewBlog"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogMetaDataPostVm"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/admin-blogger/blogs-content:
+    put:
+      summary: "PUT api/v1/admin-blogger/blogs-content"
+      operationId: "updateContentBlog"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogContentPostVm"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+    post:
+      summary: "POST api/v1/admin-blogger/blogs-content"
+      operationId: "createContentBlog"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogContentPostVm"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/admin-blogger/blogs/{id}:
+    put:
+      summary: "PUT api/v1/admin-blogger/blogs/{id}"
+      operationId: "updateBlogMetadata"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BlogMetaDataPostVm"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/admin-blogger/categories:
+    post:
+      summary: "POST api/v1/admin-blogger/categories"
+      operationId: "createNewCategory"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatePostVm"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/admin-blogger/categories/{id}:
+    put:
+      summary: "PUT api/v1/admin-blogger/categories/{id}"
+      operationId: "updateCategory"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CatePostVm"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/admin-blogger/initialize:
+    post:
+      summary: "POST api/v1/admin-blogger/initialize"
+      operationId: "initializeData"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Object"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/admin-blogger/status:
+    get:
+      summary: "GET api/v1/admin-blogger/status"
+      operationId: "checkStatus"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/blogs/categories:
+    get:
+      summary: "GET api/v1/blogs/categories"
+      operationId: "getAllCategory"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/blogs/detail/{slug}:
+    get:
+      summary: "GET api/v1/blogs/detail/{slug}"
+      operationId: "getDetailBlog"
+      parameters:
+        - name: "slug"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/v1/blogs/status:
+    get:
+      summary: "GET api/v1/blogs/status"
+      operationId: "checkStatus"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ResVm"
+  /api/v1/blogs/{slug}:
+    get:
+      summary: "GET api/v1/blogs/{slug}"
+      operationId: "getAllBlog"
+      parameters:
+        - name: "slug"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+components:
+  schemas:
+    BlogMetaDataPostVm:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        createdBy:
+          type: "string"
+        updateBy:
+          type: "string"
+        title:
+          type: "string"
+        nextBlog:
+          type: "string"
+        previousBlog:
+          type: "string"
+        slug:
+          type: "string"
+        cateId:
+          type: "integer"
+          format: "int64"
+        isShow:
+          type: "boolean"
+    ResVm:
+      type: "object"
+      properties:
+        code:
+          type: "integer"
+          format: "int32"
+    BlogContentPostVm:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        content:
+          type: "string"
+        createdBy:
+          type: "string"
+        updatedBy:
+          type: "string"
+    CatePostVm:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        name:
+          type: "string"
+        slug:
+          type: "string"
+        prefix:
+          type: "string"
+        isShow:
+          type: "boolean"
+        parent:
+          type: "string"
+    Object:
+      type: "object"
+      properties: { }

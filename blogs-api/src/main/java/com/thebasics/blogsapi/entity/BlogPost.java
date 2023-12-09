@@ -1,5 +1,6 @@
 package com.thebasics.blogsapi.entity;
 
+import com.thebasics.blogsapi.viewmodel.BlogMetaDataPostVm;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +11,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,4 +41,19 @@ public class BlogPost extends AbstractAuditEntity {
     @ManyToOne
     @JoinColumn(name = "cate_id", nullable = false)
     private Category category;
+
+    public boolean equalsWithVm(BlogMetaDataPostVm blogPost) {
+        if (blogPost == null) {
+            return false;
+        }
+        return Objects.equals(id, blogPost.id()) && Objects.equals(title, blogPost.title())
+            && Objects.equals(slug, blogPost.slug()) && Objects.equals(isShow, blogPost.isShow())
+            && Objects.equals(nextBlog, blogPost.nextBlog()) && Objects.equals(previousBlog,
+            blogPost.previousBlog()) && Objects.equals(category.getId(), blogPost.cateId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, slug, isShow, nextBlog, previousBlog, category);
+    }
 }

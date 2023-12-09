@@ -1,5 +1,6 @@
 package com.thebasics.blogsapi.entity;
 
+import com.thebasics.blogsapi.viewmodel.CatePostVm;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.Objects;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,9 +32,22 @@ public class Category extends AbstractAuditEntity {
     private String name;
     @Column(unique = true)
     private String slug;
-    private String displayName;
+    private String parent;
     private Boolean isShow;
-    private CategoryType type;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
     private Set<BlogPost> blogPostList;
+
+    public boolean equalsWithVm(CatePostVm o) {
+        if (o == null) {
+            return false;
+        }
+        return Objects.equals(id, o.id()) && Objects.equals(name, o.name())
+            && Objects.equals(slug, o.slug()) && Objects.equals(parent,
+            o.parent()) && Objects.equals(isShow, o.isShow());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, slug, parent, isShow);
+    }
 }

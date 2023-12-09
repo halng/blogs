@@ -1,14 +1,11 @@
 package com.thebasics.blogsapi.viewmodel;
 
 import com.thebasics.blogsapi.entity.Category;
-import com.thebasics.blogsapi.entity.CategoryType;
 
-public record CatePostVm(Long id, String name, String slug, String prefix, Boolean isShow,
-                         String displayName) {
+public record CatePostVm(Long id, String name, String slug, Boolean isShow,
+                         String parent) {
 
     public Category toModel() {
-        CategoryType type = prefix.equals("blogs") ? CategoryType.BLOGS : CategoryType.LIBRARY;
-        return Category.builder().name(name).slug(slug).displayName(displayName).isShow(isShow)
-            .type(type).build();
+        return Category.builder().name(name).slug(slug).parent(parent).isShow(isShow).build();
     }
 }
