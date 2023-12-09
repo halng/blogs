@@ -190,8 +190,8 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
                 return this.createCategory(catePostVm);
             }
 
-            Category _this = findCategoryById(catePostVm.id());
-            if (_this.equalsWithVm(catePostVm)) {
+            Category current = findCategoryById(catePostVm.id());
+            if (current.equalsWithVm(catePostVm)) {
                 LOG.info("Status: Category Not Change");
                 return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Nope"));
             }
@@ -211,8 +211,8 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
                 return this.createBlog(blogMetaDataPostVm);
             }
 
-            BlogPost _this = findBlogById(blogMetaDataPostVm.id());
-            if (_this.equalsWithVm(blogMetaDataPostVm)) {
+            BlogPost current = findBlogById(blogMetaDataPostVm.id());
+            if (current.equalsWithVm(blogMetaDataPostVm)) {
                 LOG.info("Status: Blog Metadata Not Change");
                 return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Nope"));
             }
@@ -225,8 +225,8 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
             LOG.info("Initialize start now... %s".formatted(BlogContentPostVm.class));
             BlogContentPostVm _that = objectMapper.convertValue(o, BlogContentPostVm.class);
             BlogPost post = findBlogById(_that.id());
-            BlogContent _this = post.getBlog();
-            if (Objects.equals(_this.getContent(), _that.content())) {
+            BlogContent current = post.getBlog();
+            if (Objects.equals(current.getContent(), _that.content())) {
                 LOG.info("Status: Blog Content Not Change");
                 return ResponseEntity.ok(new ResVm(HttpStatus.OK.value(), "Nope"));
             }
