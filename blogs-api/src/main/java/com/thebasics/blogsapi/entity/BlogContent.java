@@ -36,17 +36,4 @@ public class BlogContent extends AbstractAuditEntity {
     @JoinColumn(name = "slug", referencedColumnName = "slug")
     private BlogPost post;
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        BlogContentPostVm that = (BlogContentPostVm) o;
-        return Objects.equals(id, that.id()) && Objects.equals(content, that.content());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, content, post);
-    }
 }
