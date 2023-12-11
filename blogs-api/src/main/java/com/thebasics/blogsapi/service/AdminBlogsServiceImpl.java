@@ -28,12 +28,10 @@ import org.springframework.stereotype.Service;
 public class AdminBlogsServiceImpl implements IAdminBlogsService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AdminBlogsServiceImpl.class);
-
+    private final static String DEFAULT_USER = "DEFAULT_USER";
     private final ICategoryRepository iCategoryRepository;
     private final IBlogPostRepository iBlogPostRepository;
     private final IBlogContentRepository iBlogContentRepository;
-
-    private final static String DEFAULT_USER = "DEFAULT_USER";
 
     private BlogPost findBlogById(Long id) {
         return this.iBlogPostRepository.findById(id).orElseThrow(
@@ -123,7 +121,7 @@ public class AdminBlogsServiceImpl implements IAdminBlogsService {
 
     @Override
     public ResponseEntity<ResVm> updateBlog(Long id, BlogMetaDataPostVm data) {
-        LOG.info("Receive request to update blog" + id + " with " + data.toString());
+        LOG.info("Receive request to update blog " + id + " with " + data.toString());
 
         BlogPost blogPost = this.findBlogById(id);
 
