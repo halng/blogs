@@ -1,0 +1,11 @@
+a {
+  text-decoration: none !important;
+  color: black !important;
+}
+.dropdown:hover {
+  text-decoration: underline;
+}
+
+.dropdown-menu {
+  --bs-dropdown-link-active-bg: white !important;
+}
