@@ -19,7 +19,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const memoizedComponent = useMemo(() => {
-    // Your component logic here
     return <Header />;
   }, []);
 

@@ -9,3 +9,7 @@ a {
 .dropdown-menu {
   --bs-dropdown-link-active-bg: white !important;
 }
+
+.h5{
+  margin-bottom: 0 !important;
+}

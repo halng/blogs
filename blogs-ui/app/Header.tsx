@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import GithubIcon from "../public/social.png";
+
 type Category = {
   id: number;
   name: string;
