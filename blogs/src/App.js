@@ -1,5 +1,5 @@
 import "./App.css";
-import { Navbar, Home, Tutorials, Blogs } from "./components";
+import {  Home, Tutorials, Blogs } from "./components";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
