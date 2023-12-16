@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="container justify-content-center w-50">
+        <div className="container justify-content-center w-100">
           {memoizedComponent }
           {children}
           <Footer />

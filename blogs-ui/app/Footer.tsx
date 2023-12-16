@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Footer() {
   const WIDTH_HEIGHT = 20;
   return (
-    <div className="footer d-flex justify-content-evenly align-items-center border-top mt-3">
+    <div className="footer d-flex justify-content-evenly align-items-center border-top mt-3 bg-white">
       <div>
         <Link
           className="d-flex align-items-center"

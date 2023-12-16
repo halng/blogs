@@ -94,7 +94,7 @@ const Header = () => {
   };
 
   return (
-    <div className="header d-flex justify-content-around align-items-center h4 border-bottom">
+    <div className="header d-flex justify-content-around align-items-center h4 border-bottom sticky-top bg-white">
       <div className="d-flex justify-content-around align-items-center">
         {/* this is show icon */}
         <div>
